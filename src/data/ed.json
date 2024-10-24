@@ -1,0 +1,79 @@
+{
+    "questions": {
+        "q1": {
+            "id": "q1",
+            "question": "Do you have difficulty getting or maintaining an erection?",
+            "options": [
+                {
+                    "value": "Yes",
+                    "next-step": "q2"
+                },
+                {
+                    "value": "No",
+                    "next-step": "end",
+                    "exclude": ["all"]
+                }
+            ]
+        },
+        "q2": {
+            "id": "q2",
+            "question": "Have you tried any of the following treatments before?",
+            "options": [
+                {
+                    "value": "Viagra or Sildenafil",
+                    "next-step": "q2a"
+                },
+                {
+                    "value": "Cialis or Tadalafil",
+                    "next-step": "q2b"
+                },
+                {
+                    "value": "Both",
+                    "next-step": "q2c"
+                },
+                {
+                    "value": "None of the above",
+                    "next-step": "end",
+                    "exclude": ["sld100", "tdl20"]
+                }
+            ]
+        },
+        "q2a": {
+            "id": "q2a",
+            "question": "Was the Viagra or Sildenafil product you tried before effective?",
+            "options": [
+                {
+                    "value": "Yes",
+                    "suggest": "sld50",
+                    "next-step": "q3"
+                },
+                {
+                    "value": "No",
+                    "suggest": "tdl20",
+                    "next-step": "q3"
+                }
+            ]
+        },
+        "q3": {
+            "id": "q3",
+            "question": "Do you have, or have you ever had, any heart or neurological condisions?",
+            "options": [
+                {
+                    "value": "Yes",
+                    "next-step": "q2"
+                },
+                {
+                    "value": "No",
+                    "next-step": "end",
+                    "exclude": ["all"]
+                }
+            ]
+        }
+    },
+    "products": {
+        "sld50": "Sildenafil 50mg",
+        "sld100": "Sildenafil 100mg",
+        "tdl10": "Tadalafil 10mg",
+        "tdl20": "Tadalfil 20mg"
+    }
+}
