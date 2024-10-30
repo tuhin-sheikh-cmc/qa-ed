@@ -5,7 +5,11 @@ namespace App\Controller;
 use App\Service\Questionnaire\QuestionnaireInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use App\Service\Questionnaire\Dtos\QuestionRequestBody;
+use Exception;
 
 class ApiController extends AbstractController
 {
@@ -19,20 +23,32 @@ class ApiController extends AbstractController
     }
 
     #[Route('/api/v1/questionnaire', name: 'app_questionnaire')]
-    public function questionnaire(QuestionnaireInterface $service): JsonResponse
+    public function questionnaire(
+        QuestionnaireInterface $service,
+        #[MapRequestPayload(
+            acceptFormat: 'json'
+        )] QuestionRequestBody $questionRequest
+    ): JsonResponse {
+        $questionnaires = $service->getQuestionnaire(
+            $this->getJsonFileForQuestionnaire($questionRequest->questionnaire)
+        );
+        $question = $service->getQuestion($questionRequest->question);
+        
+        return $this->json($question);
+    }
+
+    private function getJsonFileForQuestionnaire(string $name): string
     {
-        $questionnaires = $service->getQuestionnaire('ed');
-        return $this->json([
-            "questions" => [
-                [
-                    "question" => "question 1",
-                    "options" => [
-                        "yes",
-                        "no"
-                    ],
-                    "progress" => "continue"
-                ],
-            ]
-        ]);
+        $jsonFile = sprintf(
+            '%s/src/data/%s.json',
+            $this->getParameter('kernel.project_dir'),
+            $name
+        );
+
+        if (!file_exists($jsonFile)) {
+            throw new Exception("Failed to find the file for questionnaire: ". $jsonFile);
+        }
+
+        return $jsonFile;
     }
 }

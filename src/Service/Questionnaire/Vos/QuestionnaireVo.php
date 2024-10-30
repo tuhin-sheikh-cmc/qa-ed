@@ -27,7 +27,11 @@ class QuestionnaireVo
         }
     }
 
-    public function getQuestion(string $key) {
+    public function getQuestion(?string $key = "") {
+        if (empty($key)) {
+            return $this->questions[0];
+        }
+
         /** @var QuestionDto $question */
         foreach ($this->questions as $entry) {
             if ($entry->id === $key) {

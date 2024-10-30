@@ -4,7 +4,8 @@ namespace App\Tests\Unit\Controller;
 
 use \Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use \App\Controller\ApiController;
-use App\Service\Questionnaire\QuestionnaireInterface;
+use \App\Service\Questionnaire\QuestionnaireInterface;
+use \App\Service\Questionnaire\Dtos\QuestionRequestBody;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -41,11 +42,10 @@ class ApiControllerTest extends KernelTestCase
      */
     public function testQuestionnaires(): void
     {
-        $this->apiClass->questionnaire($this->service);
-        $jsonFile = $this->container->get('kernel')->getProjectDir() . '/src/data/ed.json';
-        $this->apiClass->getQuestionnaire($jsonFile);
-        $response = $this->apiClass->getQuestion('q1');
+        $request = new QuestionRequestBody("ed","");
+        $response = $this->apiClass->questionnaire($this->service, $request);
+
         $this->assertInstanceOf(JsonResponse::class, $response, "Returned response is not instance of JsonResponse");
-        $this->assertJsonStringEqualsJsonString('{"questions":[{"question":"question 1","options":["yes","no"],"progress":"continue"}]}', $response->getContent());
+        $this->assertJsonStringEqualsJsonString('{"id":"q1","question":"Do you have difficulty getting or maintaining an erection?","options":[{"value":"Yes","exclude":[],"nextStep":"q2","suggest":""},{"value":"No","nextStep":"end","exclude":["all"],"suggest":""}]}', $response->getContent());
     }
 }

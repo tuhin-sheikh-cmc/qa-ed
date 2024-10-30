@@ -27,7 +27,7 @@ class QuestionnaireService implements QuestionnaireInterface
         $this->initQuestionnaire($jsonData);
     }
 
-    public function getQuestion(string $key)
+    public function getQuestion(?string $key = "")
     {
         // get specific question using key
         return $this->vo->getQuestion($key);
